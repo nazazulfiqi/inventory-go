@@ -16,6 +16,12 @@ func GetAllCategories() ([]models.Category, error) {
 	return categories, result.Error
 }
 
+func GetCategoryByID(id uint) (models.Category, error) {
+	var category models.Category
+	result := db.DB.First(&category, id)
+	return category, result.Error
+}
+
 func CategoryExists(id uint) (bool, error) {
 	var category models.Category
 	result := db.DB.First(&category, id)
@@ -26,4 +32,25 @@ func CategoryExists(id uint) (bool, error) {
 		return false, result.Error
 	}
 	return true, nil
+}
+
+// Update Category
+func UpdateCategory(id uint, updatedCategory models.Category) error {
+	var category models.Category
+
+	// Cek apakah kategori ada
+	if err := db.DB.First(&category, id).Error; err != nil {
+		return err
+	}
+
+	// Update kategori
+	category.Name = updatedCategory.Name
+	category.Description = updatedCategory.Description
+
+	return db.DB.Save(&category).Error
+}
+
+// Delete Category
+func DeleteCategory(id uint) error {
+	return db.DB.Delete(&models.Category{}, id).Error
 }

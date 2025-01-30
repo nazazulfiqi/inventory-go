@@ -45,19 +45,21 @@ func main() {
 
 	// Product routes
 	adminRouter.HandleFunc("/products", handlers.CreateProduct).Methods("POST")
-	// adminRouter.HandleFunc("/products/{id}", handlers.UpdateProduct).Methods("PUT")
-	// adminRouter.HandleFunc("/products/{id}", handlers.DeleteProduct).Methods("DELETE")
+	adminRouter.HandleFunc("/products/{id}", handlers.UpdateProduct).Methods("PUT")
+	adminRouter.HandleFunc("/products/{id}", handlers.DeleteProduct).Methods("DELETE")
 
 	// Category routes
 	adminRouter.HandleFunc("/categories", handlers.CreateCategory).Methods("POST")
-	// adminRouter.HandleFunc("/categories/{id}", handlers.UpdateCategory).Methods("PUT")
-	// adminRouter.HandleFunc("/categories/{id}", handlers.DeleteCategory).Methods("DELETE")
+	adminRouter.HandleFunc("/categories/{id}", handlers.UpdateCategory).Methods("PUT")
+	adminRouter.HandleFunc("/categories/{id}", handlers.DeleteCategory).Methods("DELETE")
 
 	// Public read routes
 	r.HandleFunc("/products", handlers.GetProducts).Methods("GET")
-	// r.HandleFunc("/products/{id}", handlers.GetProduct).Methods("GET")
+	r.HandleFunc("/products/{id}", handlers.GetProductByID).Methods("GET")
 	r.HandleFunc("/categories", handlers.GetCategories).Methods("GET")
+	r.HandleFunc("/categories/{id}", handlers.GetCategoryByID).Methods("GET")
 
 	fmt.Println("Server running on port 8080")
+
 	http.ListenAndServe(":8080", r)
 }

@@ -21,10 +21,24 @@ func GetProductByID(id uint) (models.Product, error) {
 	return product, result.Error
 }
 
-func UpdateProduct(product models.Product) error {
+func UpdateProduct(id uint, updatedProduct models.Product) error {
+	var product models.Product
+
+	// Cek apakah produk ada
+	if err := db.DB.First(&product, id).Error; err != nil {
+		return err
+	}
+
+	// Update produk
+	product.Name = updatedProduct.Name
+	product.Description = updatedProduct.Description
+	product.Price = updatedProduct.Price
+	product.CategoryID = updatedProduct.CategoryID // Update kategori jika perlu
+
 	return db.DB.Save(&product).Error
 }
 
+// Delete Product
 func DeleteProduct(id uint) error {
 	return db.DB.Delete(&models.Product{}, id).Error
 }
