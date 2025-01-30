@@ -12,7 +12,7 @@ import (
 
 func main() {
 	db.ConnectDB()
-	db.DB.AutoMigrate(&models.User{})
+	db.DB.AutoMigrate(&models.User{}, &models.Product{}, &models.Category{})
 
 	r := mux.NewRouter()
 
@@ -37,6 +37,26 @@ func main() {
 	adminSupervisorRouter.HandleFunc("/users", handlers.GetUsers).Methods("GET")
 	adminSupervisorRouter.HandleFunc("/users/{id}", handlers.UpdateUser).Methods("PUT")
 	adminSupervisorRouter.HandleFunc("/users/{id}", handlers.DeleteUser).Methods("DELETE")
+
+	// Admin routes
+	adminRouter := r.PathPrefix("/admin").Subrouter()
+	adminRouter.Use(handlers.AuthMiddleware)
+	adminRouter.Use(handlers.AdminMiddleware)
+
+	// Product routes
+	adminRouter.HandleFunc("/products", handlers.CreateProduct).Methods("POST")
+	// adminRouter.HandleFunc("/products/{id}", handlers.UpdateProduct).Methods("PUT")
+	// adminRouter.HandleFunc("/products/{id}", handlers.DeleteProduct).Methods("DELETE")
+
+	// Category routes
+	adminRouter.HandleFunc("/categories", handlers.CreateCategory).Methods("POST")
+	// adminRouter.HandleFunc("/categories/{id}", handlers.UpdateCategory).Methods("PUT")
+	// adminRouter.HandleFunc("/categories/{id}", handlers.DeleteCategory).Methods("DELETE")
+
+	// Public read routes
+	r.HandleFunc("/products", handlers.GetProducts).Methods("GET")
+	// r.HandleFunc("/products/{id}", handlers.GetProduct).Methods("GET")
+	r.HandleFunc("/categories", handlers.GetCategories).Methods("GET")
 
 	fmt.Println("Server running on port 8080")
 	http.ListenAndServe(":8080", r)
