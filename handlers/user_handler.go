@@ -11,6 +11,7 @@ import (
 )
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
+
 	users, err := repository.GetAllUsers()
 	if err != nil {
 		http.Error(w, "Failed to get users", http.StatusInternalServerError)
@@ -37,12 +38,32 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value(UserIDKey).(uint) // Gunakan UserIDKey bukan "user_id"
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	role, ok := r.Context().Value(RoleKey).(string)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	// Jika bukan admin DAN ID yang diminta bukan miliknya sendiri, tolak akses
+	if role != "admin" && uint(id) != userID {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
 	user, err := repository.GetUserByID(uint(id))
 	if err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
+
 	json.NewEncoder(w).Encode(user)
 }
 
