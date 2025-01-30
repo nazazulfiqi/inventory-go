@@ -51,3 +51,10 @@ func DeleteUser(id uint) error {
 	result := db.DB.Delete(&models.User{}, id)
 	return result.Error
 }
+
+// user_repository.go
+func GetUserByEmail(email string) (models.User, error) {
+	var user models.User
+	result := db.DB.Where("email = ?", email).First(&user)
+	return user, result.Error
+}
