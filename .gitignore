@@ -1,0 +1,41 @@
+# Binary files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Go specific
+*.test
+*.out
+go.work
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Air live reload
+tmp/
+
+# Debug files
+__debug_bin
+debug
+
+# Log files
+*.log
+
+# Dependencies
+vendor/
