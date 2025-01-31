@@ -16,6 +16,9 @@ func main() {
 
 	r := mux.NewRouter()
 
+	// logging middleware
+	r.Use(handlers.LoggingMiddleware)
+
 	// Public routes
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Welcome to Go CRUD API")

@@ -4,11 +4,23 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
+
+type loggingResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+}
+
+func (lrw *loggingResponseWriter) WriteHeader(code int) {
+	lrw.statusCode = code
+	lrw.ResponseWriter.WriteHeader(code)
+}
 
 // Custom type untuk context key
 type contextKey string
@@ -17,6 +29,43 @@ const (
 	UserIDKey contextKey = "user_id"
 	RoleKey   contextKey = "role"
 )
+
+func LoggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		lrw := &loggingResponseWriter{w, http.StatusOK}
+
+		// Log informasi dasar request
+		// log.Printf(
+		// 	"[%s] %s %s - Started",
+		// 	start.Format("2006-01-02 15:04:05"),
+		// 	r.Method,
+		// 	r.URL.Path,
+		// )
+
+		next.ServeHTTP(lrw, r)
+
+		// Ambil informasi user dari context jika ada
+		var userID interface{}
+		var role interface{}
+		if ctx := r.Context(); ctx != nil {
+			userID = ctx.Value(UserIDKey)
+			role = ctx.Value(RoleKey)
+		}
+
+		duration := time.Since(start)
+		log.Printf(
+			"[%s] %s %s - Completed | Status: %d | Duration: %v | UserID: %v | Role: %v",
+			time.Now().Format("2006-01-02 15:04:05"),
+			r.Method,
+			r.URL.Path,
+			lrw.statusCode,
+			duration.Round(time.Millisecond),
+			userID,
+			role,
+		)
+	})
+}
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

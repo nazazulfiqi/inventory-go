@@ -1,10 +1,10 @@
 # **Go CRUD API**
 
-An open-source **RESTful API** for managing products and categories, built with **Golang**.
+An open-source **RESTful API** for managing inventory, built with **Golang**.
 
 ## **Key Features**
 
-- ✅ **CRUD Operations** (Products & Categories)  
+- ✅ **CRUD Operations** (Products, Categories & Users)  
 - ✅ **Authentication Multi Roles**  
 - ✅ **REST API Endpoints**  
 - ✅ **PostgreSQL Database Integration**  
@@ -14,6 +14,7 @@ An open-source **RESTful API** for managing products and categories, built with 
 - ✅ **Secure Error Handling**  
 - ✅ **Database Migration**  
 - ✅ **GORM ORM**  
+- ✅ **Logging Middleware**  
 - ✅ **Docker Support**  
 
 ---
