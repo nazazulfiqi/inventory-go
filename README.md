@@ -3,7 +3,9 @@
 An open-source **RESTful API** for managing products and categories, built with **Golang**.
 
 ## **Key Features**
+
 - ✅ **CRUD Operations** (Products & Categories)  
+- ✅ **Authentication Multi Roles**  
 - ✅ **REST API Endpoints**  
 - ✅ **PostgreSQL Database Integration**  
 - ✅ **Structured Project Architecture**  
